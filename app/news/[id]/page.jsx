@@ -78,18 +78,18 @@ const NewsPage = ({ params }) => {
         <Dropdown symbol={symbol} setSymbol={setSymbol} redirectFunc={redirectFunc} />
       </div>
       <div className='flex flex-row w-full min-w-[60%] min-h-[14rem]'>
-        <div className="card rounded-lg bg-white shadow-sm w-full mt-4 mx-4">
+        <div className="card rounded-lg bg-white shadow-sm w-full mt-4 mx-4 ring-[1.5px] ring-gray-300">
           <h4 className="p-8 font-semibold text-lg">Relevant news article:</h4>
           <div className="px-6 py-2">{news}</div>
         </div>
-        <div className="card rounded-lg min-w-[200px] bg-white shadow-sm mt-4 mx-4">
+        <div className="card rounded-lg min-w-[200px] bg-white shadow-sm mt-4 mx-4 ring-[1.5px] ring-gray-300">
           <h4 className="p-8 font-semibold text-lg">Sentiment:</h4>
-          <div className="px-6 flex justify-center py-2">
+          <div className="px-6 flex justify-center py-2 font-semibold">
             {loading ? 'Analyzing...' : sentiment}
           </div>
         </div>
       </div>
-      <div className="card rounded-lg bg-white shadow-sm min-w-[70%] min-h-[20rem] mt-4 mx-4">
+      <div className="card rounded-lg bg-white shadow-sm min-w-[70%] min-h-[20rem] mt-4 mx-4 ring-[1.5px] ring-gray-300">
         <h4 className="p-8 font-semibold text-lg">Bot Analysis:</h4>
         <div className="px-6 py-2">
           {loading ? 'Getting analysis...' : advice}
