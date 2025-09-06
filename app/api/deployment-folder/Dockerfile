@@ -6,7 +6,7 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY tft_model-epoch=7-val_loss=12.2669.ckpt ./
+COPY tft_model-epoch=16-val_loss=9.4569.ckpt ./
 COPY training_tft_model.pkl ./
 COPY nbeats_model-epoch=14-val_loss=9.7598.ckpt ./
 

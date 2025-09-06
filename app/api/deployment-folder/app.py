@@ -9,6 +9,7 @@ import numpy as np
 from datetime import datetime, timedelta
 from pytorch_forecasting import TimeSeriesDataSet, NBeats, TemporalFusionTransformer
 from pytorch_forecasting.data.encoders import GroupNormalizer
+from pytorch_forecasting.metrics import QuantileLoss
 import requests
 import warnings
 import pickle
@@ -34,30 +35,53 @@ training_dataset = None
 nbeats_model = None
 
 def load_models():
-    """Load models at app startup"""
+    """Load models at app startup using working method"""
     global tft_model, training_dataset, nbeats_model
     
-    # Load TFT model
-    tft_model_path = "./tft_model-epoch=7-val_loss=12.2669.ckpt"
+    tft_model_path = "./tft_model-epoch=16-val_loss=9.4569.ckpt"
     training_path = './training_tft_model.pkl'
     
     if os.path.exists(tft_model_path) and os.path.exists(training_path):
         try:
-            tft_model = TemporalFusionTransformer.load_from_checkpoint(tft_model_path, map_location='cpu')
             with open(training_path, 'rb') as f:
                 training_dataset = pickle.load(f)
+            
+            checkpoint = torch.load(tft_model_path, map_location='cpu')
+            
+            tft_model = TemporalFusionTransformer.from_dataset(
+                training_dataset,
+                learning_rate=0.0005,
+                hidden_size=8,
+                attention_head_size=2,
+                dropout=0.2,
+                hidden_continuous_size=4,
+                output_size=5,
+                loss=QuantileLoss(quantiles=[0.1, 0.25, 0.5, 0.75, 0.9]),
+                reduce_on_plateau_patience=4,
+                optimizer="AdamW",
+            )
+            
+            # Load the state dict from checkpoint
+            tft_model.load_state_dict(checkpoint['state_dict'])
+            tft_model.eval()
+            tft_model = tft_model.cpu()
+            
             print("TFT model loaded successfully")
         except Exception as e:
             print(f"Error loading TFT model: {e}")
+            tft_model = None
+            training_dataset = None
     
-    # Load NBeats model
     nbeats_model_path = "./nbeats_model-epoch=14-val_loss=9.7598.ckpt"
     if os.path.exists(nbeats_model_path):
         try:
             nbeats_model = NBeats.load_from_checkpoint(nbeats_model_path, map_location='cpu')
+            nbeats_model.eval()
+            nbeats_model = nbeats_model.cpu()
             print("NBeats model loaded successfully")
         except Exception as e:
             print(f"Error loading NBeats model: {e}")
+            nbeats_model = None
 
 def compute_indicators(df):
     df['SMA_20'] = df['value'].rolling(20, min_periods=1).mean()
@@ -153,6 +177,7 @@ def prepare_data(current_data, economic_data, symbol):
     return merged
 
 def predict_tft(current_data, economic_data, symbol):
+    """Fixed predict_tft function"""
     global tft_model, training_dataset
     
     try:
@@ -167,7 +192,6 @@ def predict_tft(current_data, economic_data, symbol):
         pred_loader = pred_dataset.to_dataloader(train=False, batch_size=1, num_workers=0)
         
         with torch.no_grad():
-            # TODO: This line causes an error "Worker was seng SIGSESV!"
             predictions = tft_model.predict(pred_loader, mode='prediction')
         
         predictions = predictions.detach().cpu().numpy().squeeze()
