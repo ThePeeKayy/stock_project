@@ -265,9 +265,11 @@ const StockAnalysis = ({ params }) => {
         </div>
 
         {loading && (
-          <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-400"></div>
-            <span className="ml-3 text-gray-300">Analyzing market data...</span>
+                    <div className="flex justify-center items-center h-64">
+            <div className="h-4 w-4 bg-blue-500 rounded-full animate-pulse"></div>
+            <span className="ml-3 text-gray-600 font-medium">
+              Analyzing market data...
+            </span>
           </div>
         )}
 

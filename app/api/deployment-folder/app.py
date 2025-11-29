@@ -277,43 +277,55 @@ hf_headers = {
 @app.route('/analyze', methods=['POST'])
 def predict2():
     data = request.json
-    text = data.get('news')
-    symbol = data.get('stock')
-    combined_text = f"For stock symbol {symbol}, {text}"
+    text = data.get('news', '')
+    symbol = data.get('stock', '')
 
-    sentiment_payload = {"inputs": combined_text}
-    
-    try:
-        sentiment_response = requests.post(SENTIMENT_API_URL, headers=hf_headers, json=sentiment_payload)
-        sentiment_response.raise_for_status()
-        sentiment_result = sentiment_response.json()[0]
-        sentiment = 'positive' if sentiment_result[0]['label'] == 'LABEL_2' else 'negative'
-        print(f"Sentiment: {sentiment}")
-    except Exception as e:
-        print(f"Error during sentiment analysis: {e}")
-        return jsonify({'error': str(e)})
+    if not text:
+        return jsonify({'error': 'No news text provided'}), 400
 
-    advice_prompt = (
+    # --- First call: sentiment classification ---
+    sentiment_prompt = (
         f"Stock Symbol: {symbol}\n"
-        f"News Summary: {text}\n"
-        f"Sentiment Analysis: {sentiment}\n\n"
-        f"Based on the news and sentiment analysis, provide a detailed investment recommendation for {symbol}. "
-        f"Should an investor buy, hold, or sell? Explain your reasoning in 2-3 sentences."
+        f"News Summary: {text}\n\n"
+        "Classify the sentiment of this news as Positive, Neutral, or Negative. "
+        "Only return one of these three words."
     )
 
     try:
-        response = openai_client.chat.completions.create(
+        sentiment_response = openai_client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": sentiment_prompt}],
+            max_tokens=10,
+            temperature=0
+        )
+        sentiment = sentiment_response.choices[0].message.content.strip()
+    except Exception as e:
+        print(f"OpenAI sentiment error: {e}")
+        return jsonify({'error': str(e)}), 500
+
+    # --- Second call: investment advice ---
+    advice_prompt = (
+        f"Stock Symbol: {symbol}\n"
+        f"News Summary: {text}\n"
+        f"Sentiment: {sentiment}\n\n"
+        "Based on the news and sentiment, provide a detailed investment recommendation for this stock: "
+        "Should an investor Buy, Hold, or Sell? Explain your reasoning in 2-3 sentences."
+    )
+
+    try:
+        advice_response = openai_client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": advice_prompt}],
             max_tokens=200,
             temperature=0.7
         )
-        generated_advice = response.choices[0].message.content
+        advice = advice_response.choices[0].message.content.strip()
     except Exception as e:
-        print(f"Error during text generation: {e}")
-        return jsonify({'error': str(e)})
+        print(f"OpenAI advice generation error: {e}")
+        return jsonify({'error': str(e)}), 500
 
-    return jsonify({'sentiment': sentiment, 'advice': generated_advice})
+    return jsonify({'sentiment': sentiment, 'advice': advice})
+
 
 @app.route('/health')
 def health():

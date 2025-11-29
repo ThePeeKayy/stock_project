@@ -38,7 +38,6 @@ export default function Example() {
     { name: 'Stocks', href: '/analysis/AAPL', icon: ChartBarIcon },
     { name: 'News Analysis', href: '/news/AAPL', icon: NewspaperIcon},
     { name: 'Portfolio', href: `/portfolio/${session?.user?.id}`, icon: BriefcaseIcon },
-    { name: 'Purchase History', href: '/history/1', icon: DocumentDuplicateIcon},
     
   ]
   useEffect(()=>{
