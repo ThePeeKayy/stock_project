@@ -37,7 +37,7 @@ export default function StockBotHero() {
           
           
         </div>
-        <div className="mx-auto mt-16 flex max-w-2xl sm:mt-24 lg:ml-6 lg:mr-0 lg:mt-[230px] xl:ml-8">
+        <div className="mx-auto mt-16 flex max-w-2xl sm:mt-24 lg:ml-6 lg:mr-0 lg:mt-[180px] xl:ml-8">
           <div className="min-h-[600px] object-cover">
             <Image
               src={stockphoto}
