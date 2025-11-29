@@ -28,16 +28,16 @@ export default function StockBotHero() {
         <div className="mx-auto max-w-2xl flex-shrink-0 lg:mx-0 lg:max-w-xl lg:pt-8">
           
           
-          <h1 className="mt-2 text-4xl font-bold tracking-tight text-gray-900 sm:text-7xl">
+          <h1 className="mt-2 text-2xl font-bold tracking-tight text-gray-900 sm:text-7xl">
             Predict Stock Market Trends with Confidence
           </h1>
-          <p className="mt-6 text-xl leading-8 text-gray-600">
+          <p className="mt-6 text-lg leading-8 text-gray-600">
             Utilize advanced AI models to predict stock market movements. Leverage the power of PyTorch, StableBaselines, and Yahoo Finance data for accurate and reliable predictions.
           </p>
           
           
         </div>
-        <div className="mx-auto mt-16 flex max-w-2xl sm:mt-24 lg:ml-6 lg:mr-0 lg:mt-[300px] xl:ml-8">
+        <div className="mx-auto mt-16 flex max-w-2xl sm:mt-24 lg:ml-6 lg:mr-0 lg:mt-[230px] xl:ml-8">
           <div className="min-h-[600px] object-cover">
             <Image
               src={stockphoto}
