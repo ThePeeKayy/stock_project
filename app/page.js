@@ -41,7 +41,7 @@ export default function StockBotHero() {
     <div className="relative min-h-screen flex items-center justify-center overflow-hidden">      
       <div className="relative z-10 max-w-6xl mx-auto px-4 text-center">
         <h1 className="text-5xl md:text-7xl font-bold text-black mb-6 tracking-tight">
-          Predict Stock Market Trends with <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600">Stockly</span>
+          Predict Stock Market Trends with <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600 text-7xl md:text-9xl">Stockly</span>
         </h1>
 
         <div className="flex flex-wrap justify-center gap-4 mt-16">
