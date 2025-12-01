@@ -1,17 +1,52 @@
-import stockphoto from '../public/testimg.png'
-import Image from 'next/image';
+"use client"
+import { useEffect, useState } from "react"
+
+const stockSymbols = [
+  { symbol: "AAPL", name: "Apple" },
+  { symbol: "MSFT", name: "Microsoft" },
+  { symbol: "AMD", name: "Advanced Micro Devices" },
+  { symbol: "NVDA", name: "NVIDIA" },
+  { symbol: "TSLA", name: "Tesla" },
+  { symbol: "CRM", name: "Salesforce" },
+  { symbol: "SHOP", name: "Shopify" },
+  { symbol: "GOOG", name: "Alphabet" },
+]
+
+function getCompanyDomain(symbol) {
+  const domainMap = {
+    AAPL: "apple.com",
+    MSFT: "microsoft.com",
+    AMD: "amd.com",
+    NVDA: "nvidia.com",
+    TSLA: "tesla.com",
+    CRM: "salesforce.com",
+    SHOP: "shopify.com",
+    GOOG: "google.com",
+  }
+  return domainMap[symbol] || `${symbol.toLowerCase()}.com`
+}
 
 export default function StockBotHero() {
-  return (
-    <div className="relative isolate overflow-hidden lg:max-h-screen bg-white">
-      <svg
-        className="absolute inset-0 -z-10 h-full w-full"
-        aria-hidden="true"
-      >
-        
-      </svg>
+  const [currentIndex, setCurrentIndex] = useState(0)
 
-      <div
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % stockSymbols.length)
+    }, 3000) // Rotate every 3 seconds
+
+    return () => clearInterval(interval)
+  }, [])
+
+  return (
+    <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-20"></div>
+      
+      <div className="relative z-10 max-w-6xl mx-auto px-4 text-center">
+        <h1 className="text-5xl md:text-7xl font-bold text-black mb-6 tracking-tight">
+          Predict Stock Market Trends with <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600">Stockly</span>
+        </h1>
+
+<div
         className=" absolute left-[calc(50%-4rem)] top-10 -z-10 transform-gpu blur-3xl sm:left-[calc(50%-18rem)] lg:left-48 lg:top-[calc(50%-30rem)] xl:left-[calc(50%-24rem)]"
         aria-hidden="true"
       >
@@ -23,30 +58,44 @@ export default function StockBotHero() {
           }}
         />
       </div>
-      <div className="mx-auto max-w-7xl px-6 pb-24 lg:pt-0 pt-10 sm:pb-32 lg:flex lg:px-8 lg:py-40">
-        
-        <div className="mx-auto max-w-2xl flex-shrink-0 lg:mx-0 lg:max-w-xl lg:pt-8">
-          
-          
-          <h1 className="mt-2 text-2xl font-bold tracking-tight text-gray-900 sm:text-7xl">
-            Predict Stock Market Trends with Confidence
-          </h1>
-          <p className="mt-6 text-lg leading-8 text-gray-600">
-            Utilize advanced AI models to predict stock market movements. Leverage the power of PyTorch, StableBaselines, and Yahoo Finance data for accurate and reliable predictions.
-          </p>
-          
-          
-        </div>
-        <div className="mx-auto mt-16 flex max-w-2xl sm:mt-24 lg:ml-6 lg:mr-0 lg:mt-[180px] xl:ml-8">
-          <div className="min-h-[600px] object-cover">
-            <Image
-              src={stockphoto}
-              alt="App screenshot"
-              className="min-h-[600px] lg:mt-12 lg:min-h-[760px] object-cover w-auto rounded-md"
-            />
-          </div>
+
+        <div className="flex flex-wrap justify-center gap-4 mt-16">
+          {stockSymbols.map((stock, index) => {
+            const isActive = index === currentIndex
+            return (
+              <a
+                key={stock.symbol}
+                href={`/analysis/${stock.symbol}`}
+                className={`
+                  transition-all duration-500 ease-in-out
+                  ${isActive 
+                    ? "scale-110 opacity-100 shadow-xl shadow-blue-300/100" 
+                    : "scale-100 opacity-60 hover:opacity-80"
+                  }
+                  bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-gray/20
+                  min-w-[160px] cursor-pointer
+                `}
+              >
+                <div className="flex flex-col items-center gap-3">
+                  <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center p-2 ">
+                    <img 
+                      src={`https://logo.clearbit.com/${getCompanyDomain(stock.symbol)}`}
+                      alt={`${stock.name} logo`}
+                      className="w-full h-full object-contain"
+                      onError={(e) => {
+                        // Fallback to alternative logo service if Clearbit fails
+                        e.currentTarget.src = `https://img.logo.dev/${getCompanyDomain(stock.symbol)}?token=pk_X-NzA5MjQxOTI4OQ`
+                      }}
+                    />
+                  </div>
+                  <div className="text-2xl font-bold text-black">{stock.symbol}</div>
+                  <div className="text-sm text-gray-700">{stock.name}</div>
+                </div>
+              </a>
+            )
+          })}
         </div>
       </div>
     </div>
-  );
+  )
 }
