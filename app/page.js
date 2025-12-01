@@ -32,28 +32,25 @@ export default function StockBotHero() {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % stockSymbols.length)
-    }, 3000) // Rotate every 3 seconds
+    }, 3000) 
 
     return () => clearInterval(interval)
   }, [])
 
   return (
     <div className="relative min-h-screen flex items-center justify-center overflow-hidden">
+       <div
+        className="absolute inset-0 left-0 -z-10 blur-3xl flex justify-center items-center"
+        aria-hidden="true"
+      >
+        <div className="aspect-[1108/632] w-[69.25rem] bg-gradient-to-r from-[#80caff] to-[#4f46e5] opacity-15" style={{ clipPath: 'polygon(73.6% 51.7%, 91.7% 11.8%, 100% 46.4%, 97.4% 82.2%, 92.5% 84.9%, 75.7% 64%, 55.3% 47.5%, 46.5% 49.4%, 45% 62.9%, 50.3% 87.2%, 21.3% 64.1%, 0.1% 100%, 5.4% 51.1%, 21.4% 63.9%, 58.9% 0.2%, 73.6% 51.7%)', }} />
+      </div>
       <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-20"></div>
       
       <div className="relative z-10 max-w-6xl mx-auto px-4 text-center">
         <h1 className="text-5xl md:text-7xl font-bold text-black mb-6 tracking-tight">
           Predict Stock Market Trends with <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600">Stockly</span>
         </h1>
-
-
-        <div
-          className="aspect-[1108/632] w-[69.25rem] bg-gradient-to-r from-[#80caff] to-[#4f46e5] opacity-20"
-          style={{
-            clipPath:
-              'polygon(73.6% 51.7%, 91.7% 11.8%, 100% 46.4%, 97.4% 82.2%, 92.5% 84.9%, 75.7% 64%, 55.3% 47.5%, 46.5% 49.4%, 45% 62.9%, 50.3% 87.2%, 21.3% 64.1%, 0.1% 100%, 5.4% 51.1%, 21.4% 63.9%, 58.9% 0.2%, 73.6% 51.7%)',
-          }}
-        />
 
         <div className="flex flex-wrap justify-center gap-4 mt-16">
           {stockSymbols.map((stock, index) => {
@@ -66,7 +63,7 @@ export default function StockBotHero() {
                   transition-all duration-500 ease-in-out
                   ${isActive 
                     ? "scale-110 opacity-100 shadow-xl shadow-blue-300/100" 
-                    : "scale-100 opacity-60 hover:opacity-80"
+                    : "scale-100 opacity-100 hover:opacity-80"
                   }
                   bg-white/10 backdrop-blur-lg rounded-xl p-6 border border-gray/20
                   min-w-[160px] cursor-pointer
