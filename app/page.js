@@ -61,18 +61,7 @@ export default function StockBotHero() {
                   min-w-[160px] cursor-pointer
                 `}
               >
-                <div className="flex flex-col items-center gap-3">
-                  <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center p-2 ">
-                    <img 
-                      src={`https://logo.clearbit.com/${getCompanyDomain(stock.symbol)}`}
-                      alt={`${stock.name} logo`}
-                      className="w-full h-full object-contain"
-                      onError={(e) => {
-                        // Fallback to alternative logo service if Clearbit fails
-                        e.currentTarget.src = `https://img.logo.dev/${getCompanyDomain(stock.symbol)}?token=pk_X-NzA5MjQxOTI4OQ`
-                      }}
-                    />
-                  </div>
+                <div className="flex flex-col items-center gap-3 py-[30px]">
                   <div className="text-2xl font-bold text-black">{stock.symbol}</div>
                   <div className="text-sm text-gray-700">{stock.name}</div>
                 </div>

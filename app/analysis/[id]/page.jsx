@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, use } from "react";
 import { Dropdown } from "@/app/ui/Dropdown";
 import { useRouter } from "next/navigation";
 import {
@@ -25,7 +25,9 @@ import {
 } from "@heroicons/react/24/outline";
 
 const StockAnalysis = ({ params }) => {
-  const [symbol, setSymbol] = useState(params.id);
+  const { id } = use(params);
+
+  const [symbol, setSymbol] = useState(id);
   const [chartData, setChartData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);

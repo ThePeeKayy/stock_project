@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, use } from 'react'
 import { Dropdown } from '@/app/ui/Dropdown'
 import { useRouter } from 'next/navigation'
 import styles from './newspage.css'
@@ -13,7 +13,7 @@ const NewsPage = ({ params }) => {
   const [loading, setLoading] = useState(false)
   const router = useRouter()
   const finnhub_key = process.env.NEXT_PUBLIC_FINNHUB_KEY
-
+  const {id} = use(params);
   const redirectFunc = (symbol) => {
     router.push(`/news/${symbol}`)
   }
@@ -61,9 +61,9 @@ const NewsPage = ({ params }) => {
   }
 
   useEffect(() => {
-    setSymbol(params.id)
-    getNews(params.id)
-  }, [params.id])
+    setSymbol(id)
+    getNews(id)
+  }, [id])
 
   useEffect(() => {
     if (news && symbol) {
