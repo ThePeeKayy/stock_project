@@ -16,8 +16,6 @@ import {
 } from "recharts";
 import axios from "axios";
 import { 
-  TrendingUpIcon, 
-  TrendingDownIcon,
   ChartBarIcon,
   CurrencyDollarIcon,
   CpuChipIcon,
